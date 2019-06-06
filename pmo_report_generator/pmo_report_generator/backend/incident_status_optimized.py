@@ -97,19 +97,28 @@ class sheet1_update:
         # save the workbook
         writer.save()
 
-    def update_backlog(srcfile, tarfile):
+    def update_backlog(srcfile_act, tarfile, srcfile_inc):
+        if os.path.exists(srcfile_inc):
+            df_inc = pd.read_excel(srcfile_inc, sheet_name='ALL', usecols="A, T")
+
         """
         update the open action items backlog category by <20 days, 20 ~ 40 days, 41 ~ 60 days,  >60 days
         """
-        if os.path.exists(srcfile):
+        if os.path.exists(srcfile_act):
             # column A key, B priority C summary H action items resolved I Duration L team
-            df = pd.read_excel(srcfile, sheet_name='Action Items List', usecols="A,B,C,H,I,L")
+            df = pd.read_excel(srcfile_act, sheet_name='Action Items List', usecols="A,B,C,H,I,L")
             df1 = df[(df['action items resolved']).isnull()].groupby(['key', 'priority', 'summary', 'team'])['Duration'].max().round(0).reset_index(name='duration')
             # df1['open duration'] = np.where(df1['duration'] > 60, '>60 Days', np.where(df1['duration'] < 20, '<20 Days', '20-40 Days'))
             df1['open duration'] = np.where(df1['duration'] > 60, '>60 Days', np.where(df1['duration'] < 20, '<20 Days', np.where(df1['duration'] < 41, '20-40 Days', '41-60 Days')))
-            df2 = pd.DataFrame(df1, columns=['key', 'priority', 'summary', 'open duration', 'team'])
-            print(df2)
-            sheet1_update.append_df_to_excel(tarfile, df2, sheet_name='Incident Status', index=False, startrow=23)
+            # df2 = pd.DataFrame(df1, columns=['key', 'priority', 'summary', 'open duration', 'team'])
+            df2 = pd.DataFrame(df1, columns=['key', 'priority', 'summary', 'open duration'])
+            # print(df2)
+            df3 = pd.merge(df2, df_inc, how='inner', on ='key')
+            # print(df3)
+            df4 = df3.drop_duplicates(keep="first")
+            df4 = df4.rename(columns={'sz team': 'team'})
+            # print(df4)
+            sheet1_update.append_df_to_excel(tarfile, df4, sheet_name='Incident Status', index=False, startrow=23)
 
     def incident_created_rca_key(month, file):
         """
@@ -123,11 +132,12 @@ class sheet1_update:
             df = pd.read_excel(file, sheet_name='Action Items List', usecols="D,E,F,H")
             df.loc[:, ('yearMonth')] = df['created'].map(lambda x: 100 * x.year + x.month)
             m = df[(df['created'] >= '2018-01-01') & (df['yearMonth'].astype(str)==month)]
+            print(m[['created', 'rca key', 'yearMonth']])
             # print(df.dtypes)
             # print(m['RCA Key'])
-            n = set(m['rca key'].tolist())
+            n = set(m['rca key'].tolist())  # remove duplicate rca key
             create_list.update({i_month: len(n)})
-            # print('incident_created_rca_key called and returned ', create_list)
+            print('incident_created_rca_key called and returned ', create_list)
             return create_list
         else:
             print('file %s not found' % file)
@@ -251,7 +261,7 @@ class sheet1_update:
             res_list.update({v['Month']: v['Resolved']})
         return res_list
 
-    def update_created_resolved_incident(srcfile, tarfile):
+    def update_created_resolved_incident(srcfile, tarfile, srcfile_inc):
         """
         read data from Action Items List 201801_201905.xlsx [Action Items List] sheet
         generate month list
@@ -310,4 +320,6 @@ class sheet1_update:
             print('total took %s seconds for incident status update', t6 - t0)
         else:
             print('target file not exist, please check')
-        sheet1_update.update_backlog(srcfile, tarfile)
+        sheet1_update.update_backlog(srcfile, tarfile, srcfile_inc)
+
+

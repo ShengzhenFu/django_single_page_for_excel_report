@@ -89,7 +89,7 @@ def main():
     # start to read and update pmo report
     try:
         logger.info('start to update the create & resolved incidents data')
-        sheet1_update.update_created_resolved_incident(dst_file_action, report_file)
+        sheet1_update.update_created_resolved_incident(dst_file_action, report_file, dst_file_p1p2)
         logger.info('complete update the create & resolved incidents data')
     except Exception as e:
         print("error %s occurred when update created & resolved incidents data", e)

@@ -24,27 +24,35 @@ class sheet2_update:
     def get_respoinse_time_by_month(file, priority, month):
         """
         calculate response time in MEDIAN, by month and priority
+        for 201801 -201812, the scope is top 6 product=Yes and sz involved=Yes
+        for 201901 and later, the scope is sz involved=Yes
         :param file:
         :param priority:
         :param month:
         :return:
         """
-        # print('start to read response time from ')
+        # print('start to read response time from incident file
         if priority in ['P1', 'P2']:
             if os.path.exists(file):
                 # A key, C priority, M created, Q incident cause category, S top 6 product, X response hours, AB sz involved
                 df = pd.read_excel(file, sheet_name='ALL', usecols="A,C,M,Q,S,X,AB")
                 df.loc[:, ('yearMonth')] = df['created'].map(lambda x: 100 * x.year + x.month)
-                px = df[(df['created'] >= '2018-01-01') & (df['top 6 product'] == 'Yes') & (df['sz involved'] == 'Yes') &
-                        (df['priority']==priority) & (df['response hours'] > 0) & (df['yearMonth'].astype(str) == month)]
+
+                px = df[((((df['created'] >= '2018-01-01') & (df['created'] <= '2018-12-31')) & (df['top 6 product'] == 'Yes') & (df['sz involved'] == 'Yes')) | ((df['created'] >= '2019-01-01') & (df['sz involved'] == 'Yes'))) &
+                    (df['priority'] == priority) & (df['response hours'] > 0) & (df['yearMonth'].astype(str) == month)]
+
+                # px = df[(df['created'] >= '2018-01-01') & (df['top 6 product'] == 'Yes') & (df['sz involved'] == 'Yes') &
+                #         (df['priority'] == priority) & (df['response hours'] > 0) & (df['yearMonth'].astype(str) == month)]
                 if len(px) > 0:
                     """
                     calculate response time by MEDIAN method
                     """
+                    print(px[['key','created','response hours','yearMonth']])
                     median_resp_time = round(statistics.median(set(px['response hours'].tolist())), 2)
+                    print(median_resp_time)
                     return median_resp_time
                 else:
-                    #print('no data found in priority', priority, 'on year month', month, 'from file', file)
+                    print('no data found in priority', priority, 'on year month', month, 'from file', file)
                     return 0
             else:
                 print('file %s not found' % file)
@@ -74,6 +82,7 @@ class sheet2_update:
         # end_date = datetime.datetime.now()  # input end date
         end_date = sheet2_update.get_last_day_previous_month()
         month_list = [i.strftime("%Y%m") for i in pd.date_range(start=start_date, end=end_date, freq='MS')]
+
         p_list = {}
         r_list = []
         mon_list = []
@@ -138,4 +147,3 @@ class sheet2_update:
                 print('error occurred when update P2 data to response time sheet in Kun report', e)
         else:
             print('file of kun report is opened by another program')
-

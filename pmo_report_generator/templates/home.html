@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8"/>
         <title>PMO Report Web</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
         <style type="text/css">
              button {
              color: #fff !important;
@@ -23,6 +26,10 @@
             }
 
             button_re {
+            position:absolute;
+            transition: .5s ease;
+            top: 58%;
+            right: 30%;
             color: #fff !important;
             text-transform: uppercase;
             background: #60a3bc;
@@ -55,30 +62,71 @@
             -moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
             transition: all 0.4s ease 0s;
             }
+
+            .progress-bar {
+              height: 20px;
+              background: red;
+              width: 0px;
+              text-align: center;
+              border: 2px solid gray;
+            }
+
+            .pp{
+              width : 600px;
+              background-color: #e0e0e0;
+            }
+
         </style>
     </head>
     <body>
+        <br>
+        <H1 align=left style="color:#3575dd;font-size:36px;font-family:Impact;">Incident & Action item Monthly Report</H1>
         <button_re onclick="location.href='{% url 'home' %}'">Return home</button_re>
-        <p style="color:red;font-size:18px;">Notice: <br></p>
-        <p> Raw files and report are located below at </p>
-        <p style="color:blue;font-size:15px;">\\SZ-G3YC6H2\Users\dluo\Desktop\Shared Folder\Monthly Report\pmo_incident_actionitems_report<br></p>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<!-- <script src="assets/js/script.js"></script> -->
+        <br>
+        <p style="color:red;font-size:18px;font-family:Helvetica;">Notice: <br></p>
+        <p style="font-family:Helvetica";> Raw files and report are located below at </p>
+        <p style="color:blue;font-size:15px;font-family:Helvetica;">\\SZ-G3YC6H2\Users\dluo\Desktop\Shared Folder\Monthly Report\pmo_incident_actionitems_report<br></p>
         <p>
         <br>
-            <img src="http://localhost:3000/location.jpg">
+            <img src="http://10.86.17.202:3000/location.jpg">
         </p>
         <br>
+        <!--<div class="pp">-->
+          <!--<div class="progress-bar"></div>-->
+        <!--</div>-->
+        <!--<br>-->
+        <!--<button id="add" onclick="clickme(); location.href='{% url 'script' %}';">Gen</button>-->
+        <!--<script>-->
+          <!--function clickme(){-->
+            <!--var div =$("<div class='progress-bar'></div>");-->
+            <!--// $("body").append(div);-->
+            <!--$('.progress-bar').animate(-->
+              <!--{-->
+                <!--width: '100%'-->
+              <!--},-->
+              <!--{-->
+                <!--duration: 20000-->
+              <!--}-->
+            <!--);-->
+          <!--}-->
+        <!---->
+        <!--</script>-->
         <br>
-        <button_ge ondblclick="location.href='{% url 'script' %}'">Double click <br>Generate Report</button_ge>
+        <p style="font-family:Helvetica";> double click </p>
+        <button_ge ondblclick="location.href='{% url 'script' %}'">Generate Report</button_ge>
         <p>
-        <br>
-            logs will print below after report completed !
+
+        <p style="font-family:Helvetica";>logs print: </p>
         <hr>
         {% if data %}
         {{ data | safe}}
         {% endif %}
 
         <p>
-                <img style="position: fixed; bottom:0; right:0;" src="http://localhost:3000/tree.jpg" width="296" height="183">
+            <img style="position: fixed; bottom:0; right:0;" src="http://10.86.17.202:3000/tree.jpg" width="296" height="183">
         </p>
         </body>
 </html>>
