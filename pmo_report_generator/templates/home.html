@@ -28,8 +28,8 @@
             button_re {
             position:absolute;
             transition: .5s ease;
-            top: 58%;
-            right: 30%;
+            top: 1%;
+            left: 01%;
             color: #fff !important;
             text-transform: uppercase;
             background: #60a3bc;
@@ -80,7 +80,7 @@
     </head>
     <body>
         <br>
-        <H1 align=left style="color:#3575dd;font-size:36px;font-family:Impact;">Incident & Action item Monthly Report</H1>
+        <H1 align=center style="color:#3575dd;font-size:36px;font-family:Impact;">Incident & Action item Monthly Report</H1>
         <button_re onclick="location.href='{% url 'home' %}'">Return home</button_re>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -91,7 +91,9 @@
         <p style="color:blue;font-size:15px;font-family:Helvetica;">\\SZ-G3YC6H2\Users\dluo\Desktop\Shared Folder\Monthly Report\pmo_incident_actionitems_report<br></p>
         <p>
         <br>
-            <img src="http://10.86.17.202:3000/location.jpg">
+            <!--<img src="http://10.86.17.202:3000/location.jpg">-->
+            {% load static%}
+            <img src="{% static 'img/location.jpg' %}">
         </p>
         <br>
         <!--<div class="pp">-->
@@ -126,7 +128,9 @@
         {% endif %}
 
         <p>
-            <img style="position: fixed; bottom:0; right:0;" src="http://10.86.17.202:3000/tree.jpg" width="296" height="183">
+            <!--<img style="position: fixed; bottom:0; right:0;" src="http://10.86.17.202:3000/tree.jpg" width="296" height="183">-->
+            {% load static%}
+            <img style="position: fixed; bottom:0; right:0;" src="{% static 'img/tree.jpg' %}" width="296" height="183">
         </p>
         </body>
 </html>>
