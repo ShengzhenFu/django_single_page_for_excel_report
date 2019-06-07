@@ -12,7 +12,7 @@ def file_read(fname):
 
 
 def button(request):
-    return render(request, 'home.html')
+    return render(request, 'index.html')
 
 
 def output(request):
@@ -23,4 +23,9 @@ def output(request):
     run_log_str = ""
     for x in run_log:
         run_log_str += x + '\r\n'
-    return render(request, 'home.html', context={'data': run + '\r\n' + run_log_str})
+    return render(request, 'index.html', context={'data': run + '\r\n' + run_log_str})
+
+
+# def index(request):
+#     return render(request, 'index.html')
+
