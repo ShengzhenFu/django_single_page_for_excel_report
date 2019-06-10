@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from .backend import main_app
+from .backend import incident_status_optimized
 import time
+from django.template import loader
 
 
 def file_read(fname):
@@ -26,6 +28,11 @@ def output(request):
     return render(request, 'index.html', context={'data': run + '\r\n' + run_log_str})
 
 
-# def index(request):
-#     return render(request, 'index.html')
+def index(request):
+    gen_month = 'May 2019'
+    context ={
+        'gen_month': gen_month,
+        }
+    template = loader.get_template('index.html')
+    return render(request, 'index.html', context)
 
