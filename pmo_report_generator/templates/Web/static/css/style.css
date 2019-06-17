@@ -117,6 +117,13 @@ body {
     justify-self: center;
 }
 
+#inner_return {
+    grid-row: 1;
+    grid-column: 3;
+    align-self: right;
+    justify-self: right;
+}
+
 #illustration {
     grid-row: 3;
     grid-column: 2;
